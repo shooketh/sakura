@@ -1,0 +1,767 @@
+version: "3.8"
+
+services:
+  sakura1:
+    container_name: sakura1
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    ports:
+      - "50051:50051"
+    expose:
+      - 50051
+    networks:
+      default:
+        ipv4_address: 172.16.238.11
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --worker-id=0
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura2:
+    container_name: sakura2
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura1
+    ports:
+      - "50052:50052"
+    expose:
+      - 50052
+    networks:
+      default:
+        ipv4_address: 172.16.238.12
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --worker-id=1
+      - --port=50052
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura3:
+    container_name: sakura3
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura2
+    ports:
+      - "50053:50053"
+    expose:
+      - 50053
+    networks:
+      default:
+        ipv4_address: 172.16.238.13
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --worker-id=2
+      - --port=50053
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura4:
+    container_name: sakura4
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura3
+    ports:
+      - "50054:50054"
+    expose:
+      - 50054
+    networks:
+      default:
+        ipv4_address: 172.16.238.14
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50054
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura5:
+    container_name: sakura5
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura4
+    ports:
+      - "50055:50055"
+    expose:
+      - 50055
+    networks:
+      default:
+        ipv4_address: 172.16.238.15
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50055
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura6:
+    container_name: sakura6
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura5
+    ports:
+      - "50056:50056"
+    expose:
+      - 50056
+    networks:
+      default:
+        ipv4_address: 172.16.238.16
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50056
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura7:
+    container_name: sakura7
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura6
+    ports:
+      - "50057:50057"
+    expose:
+      - 50057
+    networks:
+      default:
+        ipv4_address: 172.16.238.17
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50057
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura8:
+    container_name: sakura8
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura7
+    ports:
+      - "50058:50058"
+    expose:
+      - 50058
+    networks:
+      default:
+        ipv4_address: 172.16.238.18
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50058
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura9:
+    container_name: sakura9
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura8
+    ports:
+      - "50059:50059"
+    expose:
+      - 50059
+    networks:
+      default:
+        ipv4_address: 172.16.238.19
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50059
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura10:
+    container_name: sakura10
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura9
+    ports:
+      - "50060:50060"
+    expose:
+      - 50060
+    networks:
+      default:
+        ipv4_address: 172.16.238.20
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50060
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura11:
+    container_name: sakura11
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura10
+    ports:
+      - "50061:50061"
+    expose:
+      - 50061
+    networks:
+      default:
+        ipv4_address: 172.16.238.21
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50061
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura12:
+    container_name: sakura12
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura11
+    ports:
+      - "50062:50062"
+    expose:
+      - 50062
+    networks:
+      default:
+        ipv4_address: 172.16.238.22
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50062
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura13:
+    container_name: sakura13
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura12
+    ports:
+      - "50063:50063"
+    expose:
+      - 50063
+    networks:
+      default:
+        ipv4_address: 172.16.238.23
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50063
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura14:
+    container_name: sakura14
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura13
+    ports:
+      - "50064:50064"
+    expose:
+      - 50064
+    networks:
+      default:
+        ipv4_address: 172.16.238.24
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50064
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura15:
+    container_name: sakura15
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura14
+    ports:
+      - "50065:50065"
+    expose:
+      - 50065
+    networks:
+      default:
+        ipv4_address: 172.16.238.25
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50065
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura16:
+    container_name: sakura16
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura15
+    ports:
+      - "50066:50066"
+    expose:
+      - 50066
+    networks:
+      default:
+        ipv4_address: 172.16.238.26
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50066
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura17:
+    container_name: sakura17
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura16
+    ports:
+      - "50067:50067"
+    expose:
+      - 50067
+    networks:
+      default:
+        ipv4_address: 172.16.238.27
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50067
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura18:
+    container_name: sakura18
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura17
+    ports:
+      - "50068:50068"
+    expose:
+      - 50068
+    networks:
+      default:
+        ipv4_address: 172.16.238.28
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50068
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura19:
+    container_name: sakura19
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura18
+    ports:
+      - "50069:50069"
+    expose:
+      - 50069
+    networks:
+      default:
+        ipv4_address: 172.16.238.29
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50069
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura20:
+    container_name: sakura20
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura19
+    ports:
+      - "50070:50070"
+    expose:
+      - 50070
+    networks:
+      default:
+        ipv4_address: 172.16.238.30
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50070
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura21:
+    container_name: sakura21
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura20
+    ports:
+      - "50071:50071"
+    expose:
+      - 50071
+    networks:
+      default:
+        ipv4_address: 172.16.238.31
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50071
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura22:
+    container_name: sakura22
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura21
+    ports:
+      - "50072:50072"
+    expose:
+      - 50072
+    networks:
+      default:
+        ipv4_address: 172.16.238.32
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50072
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura23:
+    container_name: sakura23
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura22
+    ports:
+      - "50073:50073"
+    expose:
+      - 50073
+    networks:
+      default:
+        ipv4_address: 172.16.238.33
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50073
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura24:
+    container_name: sakura24
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura23
+    ports:
+      - "50074:50074"
+    expose:
+      - 50074
+    networks:
+      default:
+        ipv4_address: 172.16.238.34
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50074
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura25:
+    container_name: sakura25
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura24
+    ports:
+      - "50075:50075"
+    expose:
+      - 50075
+    networks:
+      default:
+        ipv4_address: 172.16.238.35
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50075
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura26:
+    container_name: sakura26
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura25
+    ports:
+      - "50076:50076"
+    expose:
+      - 50076
+    networks:
+      default:
+        ipv4_address: 172.16.238.36
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50076
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura27:
+    container_name: sakura27
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura26
+    ports:
+      - "50077:50077"
+    expose:
+      - 50077
+    networks:
+      default:
+        ipv4_address: 172.16.238.37
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50077
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura28:
+    container_name: sakura28
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura27
+    ports:
+      - "50078:50078"
+    expose:
+      - 50078
+    networks:
+      default:
+        ipv4_address: 172.16.238.38
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50078
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura29:
+    container_name: sakura29
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura28
+    ports:
+      - "50079:50079"
+    expose:
+      - 50079
+    networks:
+      default:
+        ipv4_address: 172.16.238.39
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50079
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura30:
+    container_name: sakura30
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura29
+    ports:
+      - "50080:50080"
+    expose:
+      - 50080
+    networks:
+      default:
+        ipv4_address: 172.16.238.40
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50080
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura31:
+    container_name: sakura31
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura30
+    ports:
+      - "50081:50081"
+    expose:
+      - 50081
+    networks:
+      default:
+        ipv4_address: 172.16.238.41
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50081
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura32:
+    container_name: sakura32
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura31
+    ports:
+      - "50082:50082"
+    expose:
+      - 50082
+    networks:
+      default:
+        ipv4_address: 172.16.238.42
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50082
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+  sakura33:
+    container_name: sakura33
+    image: sakura:latest
+    volumes:
+      - ../../config:/config
+      - ./logs:/logs
+    depends_on:
+      - sakura32
+    ports:
+      - "50083:50083"
+    expose:
+      - 50083
+    networks:
+      default:
+        ipv4_address: 172.16.238.43
+    environment:
+      - HANABIRA_ENV=local
+    command:
+      - sakura
+      - --port=50083
+      - --etcd-endpoints=172.16.238.101:2379
+      - --etcd-endpoints=172.16.238.102:2379
+      - --etcd-endpoints=172.16.238.103:2379
+
+networks:
+  default:
+    external:
+      name: sakura-network

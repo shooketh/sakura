@@ -1,0 +1,29 @@
+name: Dockerize
+
+on:
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ghcr.io/${{ github.repository_owner }}/sakura
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Set GITHUB_ENV
+        run: echo "TAG=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g' )" >> $GITHUB_ENV
+
+      - name: Clone src
+        uses: actions/checkout@v2
+
+      - name: Build sakura
+        run: ./build/build.sh
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push sakura
+        run: |
+          docker tag sakura:latest ${REGISTRY}:${{ env.TAG }}
+          docker push ${REGISTRY}:${{ env.TAG }}

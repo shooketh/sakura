@@ -1,0 +1,11 @@
+FROM golang:1.17.6 as build
+WORKDIR /sakura
+COPY . .
+RUN go mod download -x
+RUN go build -o ./sakura ./cmd/server
+
+FROM gcr.io/distroless/base
+ENV APP_DIR=/sakura
+WORKDIR $APP_DIR
+COPY --from=build ${APP_DIR}/sakura /bin/sakura
+CMD ["sakura"]

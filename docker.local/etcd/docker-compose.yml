@@ -1,0 +1,92 @@
+version: "3.8"
+
+services:
+  etcd1:
+    container_name: etcd1
+    image: gcr.io/etcd-development/etcd:v3.5.1
+    volumes:
+      - ./data/etcd1:/etcd-data
+    ports:
+      - "12379:2379"
+    expose:
+      - 2379
+      - 2380
+    networks:
+      default:
+        ipv4_address: 172.16.238.101
+    environment:
+      - ETCDCTL_API=3
+    command:
+      - /usr/local/bin/etcd
+      - --data-dir=/etcd-data
+      - --name=etcd1
+      - --initial-advertise-peer-urls=http://172.16.238.101:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://172.16.238.101:2379
+      - --initial-cluster-token=docker-etcd
+      - --initial-cluster=etcd1=http://172.16.238.101:2380,etcd2=http://172.16.238.102:2380,etcd3=http://172.16.238.103:2380
+      - --initial-cluster-state=new
+      - --auto-compaction-retention=1h
+      - --auto-compaction-mode=periodic
+  etcd2:
+    container_name: etcd2
+    image: gcr.io/etcd-development/etcd:v3.5.1
+    volumes:
+      - ./data/etcd2:/etcd-data
+    ports:
+      - "22379:2379"
+    expose:
+      - 2379
+      - 2380
+    networks:
+      default:
+        ipv4_address: 172.16.238.102
+    environment:
+      - ETCDCTL_API=3
+    command:
+      - /usr/local/bin/etcd
+      - --data-dir=/etcd-data
+      - --name=etcd2
+      - --initial-advertise-peer-urls=http://172.16.238.102:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://172.16.238.102:2379
+      - --initial-cluster-token=docker-etcd
+      - --initial-cluster=etcd1=http://172.16.238.101:2380,etcd2=http://172.16.238.102:2380,etcd3=http://172.16.238.103:2380
+      - --initial-cluster-state=new
+      - --auto-compaction-retention=1h
+      - --auto-compaction-mode=periodic
+  etcd3:
+    container_name: etcd3
+    image: gcr.io/etcd-development/etcd:v3.5.1
+    volumes:
+      - ./data/etcd3:/etcd-data
+    ports:
+      - "32379:2379"
+    expose:
+      - 2379
+      - 2380
+    networks:
+      default:
+        ipv4_address: 172.16.238.103
+    environment:
+      - ETCDCTL_API=3
+    command:
+      - /usr/local/bin/etcd
+      - --data-dir=/etcd-data
+      - --name=etcd3
+      - --initial-advertise-peer-urls=http://172.16.238.103:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://172.16.238.103:2379
+      - --initial-cluster-token=docker-etcd
+      - --initial-cluster=etcd1=http://172.16.238.101:2380,etcd2=http://172.16.238.102:2380,etcd3=http://172.16.238.103:2380
+      - --initial-cluster-state=new
+      - --auto-compaction-retention=1h
+      - --auto-compaction-mode=periodic
+
+networks:
+  default:
+    external:
+      name: sakura-network

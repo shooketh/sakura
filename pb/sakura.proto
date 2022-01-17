@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/shooketh/sakura/pb";
+
+package sakura;
+
+service Generator {
+  rpc Generate (Request) returns (Reply) {}
+}
+
+message Request {}
+
+message Reply {
+  int64 id = 1;
+} 

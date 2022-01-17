@@ -1,0 +1,28 @@
+app:
+  # local | dev | prod
+  env: dev
+  datacenterID: -1
+  workerID: -1
+  workerPrefix: /sakura/worker
+  lastTimePrefix: /sakura/last-time
+
+log:
+  level: debug
+  path: logs
+  # megabytes
+  maxSize: 50
+  # days
+  maxAge: 7
+  compress: true
+
+grpc:
+  ip:
+  port: 50051
+
+etcd:
+  endpoints:
+  timeout: 5
+  username:
+  password:
+  servicePrefix: /sakura/service
+  serviceLeaseTTL: 12
