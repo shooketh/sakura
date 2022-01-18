@@ -44,7 +44,7 @@ func New(ctx context.Context) (*App, error) {
 		Logger: log.Logger,
 		Config: &clientv3.Config{
 			Endpoints:   config.Config.Etcd.Endpoints,
-			DialTimeout: time.Duration(config.Config.Etcd.Timeout) * time.Second,
+			DialTimeout: config.Config.Etcd.Timeout * time.Second,
 			Username:    config.Config.Etcd.Username,
 			Password:    config.Config.Etcd.Password,
 		},

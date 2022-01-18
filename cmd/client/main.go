@@ -25,14 +25,14 @@ func init() {
 }
 
 func main() {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	var err error
 	handler, err := handler.New(ctx, &handler.Option{
 		Config: &clientv3.Config{
 			Endpoints:   endpoints,
-			DialTimeout: time.Duration(timeout) * time.Second,
+			DialTimeout: timeout,
 		},
 	})
 	if err != nil {
