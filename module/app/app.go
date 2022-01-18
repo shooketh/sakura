@@ -11,17 +11,13 @@ import (
 
 	"cloud.google.com/go/compute/metadata"
 	"github.com/rs/zerolog"
-	handler "github.com/shooketh/etcd-handler"
+	"github.com/shooketh/etcd-handler"
 	"github.com/shooketh/sakura/common/config"
 	"github.com/shooketh/sakura/common/errors"
 	"github.com/shooketh/sakura/common/log"
 	"github.com/shooketh/sakura/module/generator"
 	"github.com/shooketh/sakura/module/grpc"
-)
-
-const (
-	generateWorkerIDRetryTimes = 3
-	getWorkerIDRetryTimes      = 3
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type App struct {
@@ -40,15 +36,17 @@ type datacenter struct {
 }
 
 func New(ctx context.Context) (*App, error) {
-	var err error
+	ctx, cancel := context.WithTimeout(ctx, config.Config.App.Timeout*time.Second)
+	defer cancel()
 
-	handler, err := handler.New(&handler.Option{
+	var err error
+	handler, err := handler.New(ctx, &handler.Option{
 		Logger: log.Logger,
-		EtcdOption: &handler.EtcdOption{
-			Endpoints: config.Config.Etcd.Endpoints,
-			Timeout:   time.Duration(config.Config.Etcd.Timeout) * time.Second,
-			Username:  config.Config.Etcd.Username,
-			Password:  config.Config.Etcd.Password,
+		Config: &clientv3.Config{
+			Endpoints:   config.Config.Etcd.Endpoints,
+			DialTimeout: time.Duration(config.Config.Etcd.Timeout) * time.Second,
+			Username:    config.Config.Etcd.Username,
+			Password:    config.Config.Etcd.Password,
 		},
 	})
 	if err != nil {
@@ -91,9 +89,6 @@ func New(ctx context.Context) (*App, error) {
 }
 
 func (app *App) GetDatacenterID(ctx context.Context) error {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-
 	if metadata.OnGCE() {
 		z, err := metadata.Zone()
 		if err != nil {
@@ -153,24 +148,13 @@ func (app *App) GetWorkerID(ctx context.Context) error {
 
 		key := fmt.Sprintf("%s/%d/%d", app.WorkerPrefix, app.DatacenterID, app.WorkerID)
 
-		failedCount := 0
-		for {
-			resp, err := app.EtcdHandler.PutNx(ctx, key, app.Addr)
-			if err != nil {
-				return err
-			}
+		resp, err := app.EtcdHandler.PutNx(ctx, key, app.Addr)
+		if err != nil {
+			return err
+		}
 
-			if !resp.Succeeded {
-				if failedCount < getWorkerIDRetryTimes {
-					failedCount++
-					app.Logger.Warn().Msgf("get workerID failed, sleep 10s and retry, failedCount=%d", failedCount)
-					time.Sleep(10 * time.Second)
-					continue
-				}
-				return errors.DuplicationWorkerID
-			}
-
-			break
+		if !resp.Succeeded {
+			return errors.DuplicationWorkerID
 		}
 	}
 
@@ -179,23 +163,15 @@ func (app *App) GetWorkerID(ctx context.Context) error {
 
 func (app *App) generateWorkerID(ctx context.Context) error {
 	count := uint32(0)
-
 	h := fnv.New32a()
 	_, err := h.Write([]byte(app.Addr))
 	if err != nil {
 		return err
 	}
 	keyHash := h.Sum32()
-	failedCount := 0
+
 	for {
 		if count > generator.MaxWorkerID {
-			if failedCount < generateWorkerIDRetryTimes {
-				failedCount++
-				count = 0
-				app.Logger.Warn().Msgf("generate workerID failed, sleep 30s and retry, failedCount=%d", failedCount)
-				time.Sleep(30 * time.Second)
-				continue
-			}
 			return errors.OverflowWorkerID
 		}
 
@@ -241,7 +217,7 @@ func (app *App) GetLastGenerateTimeUnixMilli(ctx context.Context) (int64, error)
 }
 
 func (app *App) UnregisterWorker() error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), config.Config.App.Timeout*time.Second)
 	defer cancel()
 
 	if app.Generator != nil {
@@ -252,8 +228,6 @@ func (app *App) UnregisterWorker() error {
 			if err != nil {
 				return err
 			}
-		} else {
-			fmt.Println("GOOGLE")
 		}
 	}
 

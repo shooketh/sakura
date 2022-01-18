@@ -6,6 +6,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"time"
 
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -21,42 +22,43 @@ type conf struct {
 }
 
 type app struct {
-	Env            string `mapstructure:"env" env:"HANABIRA_ENV" flag:"env"`
-	DatacenterID   int64  `mapstructure:"datacenterID" env:"HANABIRA_DETACENTER_ID" flag:"datacenter-id"`
-	WorkerID       int64  `mapstructure:"workerID" env:"HANABIRA_WORKER_ID" flag:"worker-id"`
-	WorkerPrefix   string `mapstructure:"workerPrefix" env:"HANABIRA_WORKER_PREFIX" flag:"worker-prefix"`
-	LastTimePrefix string `mapstructure:"lastTimePrefix" env:"HANABIRA_LAST_TIME_PREFIX" flag:"last-time-prifix"`
+	Env            string        `mapstructure:"env" env:"SAKURA_ENV" flag:"env"`
+	Timeout        time.Duration `mapstructure:"timeout" env:"SAKURA_TIMEOUT" flag:"timeout"`
+	DatacenterID   int64         `mapstructure:"datacenterID" env:"SAKURA_DETACENTER_ID" flag:"datacenter-id"`
+	WorkerID       int64         `mapstructure:"workerID" env:"SAKURA_WORKER_ID" flag:"worker-id"`
+	WorkerPrefix   string        `mapstructure:"workerPrefix" env:"SAKURA_WORKER_PREFIX" flag:"worker-prefix"`
+	LastTimePrefix string        `mapstructure:"lastTimePrefix" env:"SAKURA_LAST_TIME_PREFIX" flag:"last-time-prifix"`
 }
 
 type log struct {
-	Level    string `mapstructure:"level" env:"HANABIRA_LOG_LEVEL" flag:"log-level"`
-	Path     string `mapstructure:"path" env:"HANABIRA_LOG_PATH" flag:"log-path"`
-	MaxSize  int    `mapstructure:"maxSize" env:"HANABIRA_LOG_MAX_SIZE" flag:"log-max-size"`
-	MaxAge   int    `mapstructure:"maxAge" env:"HANABIRA_LOG_MAX_AGE" flag:"log-max-age"`
-	Compress bool   `mapstructure:"compress" env:"HANABIRA_LOG_COMPRESS" flag:"log-compress"`
+	Level    string `mapstructure:"level" env:"SAKURA_LOG_LEVEL" flag:"log-level"`
+	Path     string `mapstructure:"path" env:"SAKURA_LOG_PATH" flag:"log-path"`
+	MaxSize  int    `mapstructure:"maxSize" env:"SAKURA_LOG_MAX_SIZE" flag:"log-max-size"`
+	MaxAge   int    `mapstructure:"maxAge" env:"SAKURA_LOG_MAX_AGE" flag:"log-max-age"`
+	Compress bool   `mapstructure:"compress" env:"SAKURA_LOG_COMPRESS" flag:"log-compress"`
 }
 
 type grpc struct {
-	IP   string `mapstructure:"ip" env:"HANABIRA_GRPC_IP" flag:"ip"`
-	Port string `mapstructure:"port" env:"HANABIRA_GRPC_PORT" flag:"port"`
+	IP   string `mapstructure:"ip" env:"SAKURA_GRPC_IP" flag:"ip"`
+	Port string `mapstructure:"port" env:"SAKURA_GRPC_PORT" flag:"port"`
 }
 
 type etcd struct {
-	Endpoints       []string `mapstructure:"endpoints" env:"HANABIRA_ETCD_ENDPOINTS" flag:"etcd-endpoints"`
-	Timeout         int64    `mapstructure:"timeout" env:"HANABIRA_ETCD_TIMEOUT" flag:"etcd-timeout"`
-	Username        string   `mapstructure:"username" env:"HANABIRA_ETCD_USERNAME" flag:"etcd-username"`
-	Password        string   `mapstructure:"password" env:"HANABIRA_ETCD_PASSWORD" flag:"etcd-password"`
-	ServicePrefix   string   `mapstructure:"servicePrefix" env:"HANABIRA_ETCD_SERVICE_PREFIX" flag:"etcd-service-prefix"`
-	ServiceLeaseTTL int64    `mapstructure:"serviceLeaseTTL" env:"HANABIRA_ETCD_SERVICE_LEASE_TTL" flag:"etcd-service-lease-ttl"`
+	Endpoints       []string      `mapstructure:"endpoints" env:"SAKURA_ETCD_ENDPOINTS" flag:"etcd-endpoints"`
+	Timeout         time.Duration `mapstructure:"timeout" env:"SAKURA_ETCD_TIMEOUT" flag:"etcd-timeout"`
+	Username        string        `mapstructure:"username" env:"SAKURA_ETCD_USERNAME" flag:"etcd-username"`
+	Password        string        `mapstructure:"password" env:"SAKURA_ETCD_PASSWORD" flag:"etcd-password"`
+	ServicePrefix   string        `mapstructure:"servicePrefix" env:"SAKURA_ETCD_SERVICE_PREFIX" flag:"etcd-service-prefix"`
+	ServiceLeaseTTL int64         `mapstructure:"serviceLeaseTTL" env:"SAKURA_ETCD_SERVICE_LEASE_TTL" flag:"etcd-service-lease-ttl"`
 }
 
 func Init() error {
-	Config.App.Env = os.Getenv("HANABIRA_ENV")
+	Config.App.Env = os.Getenv("SAKURA_ENV")
 
 	parseFlags()
 
 	if flag.Lookup("env").Value.String() == "" {
-		return fmt.Errorf("failed to set HANABIRA_ENV or --env flag")
+		return fmt.Errorf("failed to set SAKURA_ENV or --env flag")
 	}
 
 	systemPath := "/etc/sakura/"
@@ -93,6 +95,7 @@ func Init() error {
 
 func parseFlags() {
 	flag.StringVar(&Config.App.Env, "env", Config.App.Env, "sakura application environment")
+	flag.Duration("timeout", Config.App.Timeout, "")
 	flag.Int64("datacenter-id", Config.App.DatacenterID, "datacenter id (0 ~ 31)")
 	flag.Int64("worker-id", Config.App.WorkerID, "worker id (0 ~ 31)")
 	flag.String("worker-prefix", Config.App.WorkerPrefix, "")
@@ -105,7 +108,7 @@ func parseFlags() {
 	flag.String("ip", Config.GRPC.IP, "ip address to listen")
 	flag.String("port", Config.GRPC.Port, "port to listen")
 	flag.StringSlice("etcd-endpoints", Config.Etcd.Endpoints, "endpoints for connecting etcd")
-	flag.Int64("etcd-timeout", Config.Etcd.Timeout, "etcd operation timeout(s)")
+	flag.Duration("etcd-timeout", Config.Etcd.Timeout, "etcd operation timeout(s)")
 	flag.String("etcd-username", Config.Etcd.Username, "username for connecting etcd")
 	flag.String("etcd-password", Config.Etcd.Password, "password for connecting etcd")
 	flag.String("etcd-service-prefix", Config.Etcd.ServicePrefix, "")

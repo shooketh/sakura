@@ -6,10 +6,11 @@ import (
 	"os"
 	"time"
 
-	handler "github.com/shooketh/etcd-handler"
+	"github.com/shooketh/etcd-handler"
 	"github.com/shooketh/sakura"
 	"github.com/shooketh/sakura/common/location"
 	"github.com/shooketh/sakura/module/converter"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 var (
@@ -24,11 +25,14 @@ func init() {
 }
 
 func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	var err error
-	handler, err := handler.New(&handler.Option{
-		EtcdOption: &handler.EtcdOption{
-			Endpoints: endpoints,
-			Timeout:   timeout,
+	handler, err := handler.New(ctx, &handler.Option{
+		Config: &clientv3.Config{
+			Endpoints:   endpoints,
+			DialTimeout: time.Duration(timeout) * time.Second,
 		},
 	})
 	if err != nil {

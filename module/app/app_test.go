@@ -18,12 +18,11 @@ import (
 )
 
 var (
-	defaultIP              = "192.168.1.1"
-	defaultPort            = "50051"
-	defaultEndpoints       = []string{"127.0.0.1:12379", "127.0.0.1:22379", "127.0.0.1:32379"}
-	defaultTimeout         = 5 * time.Second
-	workerLeaseTTL   int64 = 100
-	workerPrefix           = "/sakura/worker"
+	defaultIP        = "192.168.1.1"
+	defaultPort      = "50051"
+	defaultEndpoints = []string{"127.0.0.1:12379", "127.0.0.1:22379", "127.0.0.1:32379"}
+	defaultTimeout   = 5 * time.Second
+	workerPrefix     = "/sakura/worker"
 	logger           zerolog.Logger
 )
 
@@ -35,14 +34,17 @@ func init() {
 }
 
 func TestDuplicatedWorkerID(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
 	var datacenterID int64 = 1
 	var workerID int64 = 0
 
-	handler, err := handler.New(&handler.Option{
+	handler, err := handler.New(ctx, &handler.Option{
 		Logger: logger,
-		EtcdOption: &handler.EtcdOption{
-			Endpoints: defaultEndpoints,
-			Timeout:   defaultTimeout,
+		Config: &clientv3.Config{
+			Endpoints:   defaultEndpoints,
+			DialTimeout: defaultTimeout,
 		},
 	})
 	assert.Nil(t, err)
@@ -56,23 +58,26 @@ func TestDuplicatedWorkerID(t *testing.T) {
 		Logger:       logger,
 	}
 
-	err = app.GetWorkerID(context.TODO())
+	err = app.GetWorkerID(ctx)
 	assert.Nil(t, err)
-	err = app.GetWorkerID(context.TODO())
+	err = app.GetWorkerID(ctx)
 	assert.Equal(t, err, errors.DuplicationWorkerID)
-	_, err = app.EtcdHandler.Delete(context.TODO(), fmt.Sprintf("%s/%d/%d", workerPrefix, datacenterID, workerID))
+	_, err = app.EtcdHandler.Delete(ctx, fmt.Sprintf("%s/%d/%d", workerPrefix, app.DatacenterID, app.WorkerID))
 	assert.Nil(t, err)
 }
 
 func TestGenerateWorkerID(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
 	var datacenterID int64 = 1
 	var workerID int64 = -1
 
-	handler, err := handler.New(&handler.Option{
+	handler, err := handler.New(ctx, &handler.Option{
 		Logger: logger,
-		EtcdOption: &handler.EtcdOption{
-			Endpoints: defaultEndpoints,
-			Timeout:   defaultTimeout,
+		Config: &clientv3.Config{
+			Endpoints:   defaultEndpoints,
+			DialTimeout: defaultTimeout,
 		},
 	})
 	assert.Nil(t, err)
@@ -86,23 +91,26 @@ func TestGenerateWorkerID(t *testing.T) {
 		Logger:       logger,
 	}
 
-	err = app.GetWorkerID(context.TODO())
-	t.Logf("workerID is: %d", workerID)
+	err = app.GetWorkerID(ctx)
+	t.Logf("workerID is: %d", app.WorkerID)
 	assert.Nil(t, err)
 
-	_, err = handler.Delete(context.TODO(), fmt.Sprintf("%s/%d/%d", workerPrefix, datacenterID, workerID))
+	_, err = handler.Delete(ctx, fmt.Sprintf("%s/%d/%d", workerPrefix, app.DatacenterID, app.WorkerID))
 	assert.Nil(t, err)
 }
 
 func TestWorkerIDOverflow(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
 	var datacenterID int64 = 1
 	var workerID int64 = -1
 
-	handler, err := handler.New(&handler.Option{
+	handler, err := handler.New(ctx, &handler.Option{
 		Logger: logger,
-		EtcdOption: &handler.EtcdOption{
-			Endpoints: defaultEndpoints,
-			Timeout:   defaultTimeout,
+		Config: &clientv3.Config{
+			Endpoints:   defaultEndpoints,
+			DialTimeout: defaultTimeout,
 		},
 	})
 	assert.Nil(t, err)
@@ -117,19 +125,19 @@ func TestWorkerIDOverflow(t *testing.T) {
 	}
 
 	for i := 0; i <= generator.MaxWorkerID; i++ {
-		err = app.GetWorkerID(context.TODO())
+		err = app.GetWorkerID(ctx)
 		assert.Nil(t, err)
 		if err != nil {
 			break
 		}
-		t.Logf("current workerID is: %d", workerID)
+		t.Logf("current workerID is: %d", app.WorkerID)
 		app.WorkerID = -1
 	}
 
-	err = app.GetWorkerID(context.TODO())
+	err = app.GetWorkerID(ctx)
 	assert.Equal(t, err, errors.OverflowWorkerID)
 
-	withRange := clientv3.WithRange(fmt.Sprintf("%s/%d/%s", workerPrefix, datacenterID, "\\0"))
-	_, err = handler.Delete(context.TODO(), fmt.Sprintf("%s/%d/%d", workerPrefix, datacenterID, 0), withRange)
+	withRange := clientv3.WithRange(fmt.Sprintf("%s/%d/%s", workerPrefix, app.DatacenterID, "\\0"))
+	_, err = handler.Delete(ctx, fmt.Sprintf("%s/%d/%d", workerPrefix, app.DatacenterID, 0), withRange)
 	assert.Nil(t, err)
 }

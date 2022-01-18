@@ -1,6 +1,7 @@
 app:
   # local | dev | prod
   env: prod
+  timeout: 5
   datacenterID: -1
   workerID: -1
   workerPrefix: /sakura/worker

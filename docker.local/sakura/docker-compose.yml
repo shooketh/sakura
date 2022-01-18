@@ -15,7 +15,7 @@ services:
       default:
         ipv4_address: 172.16.238.11
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --worker-id=0
@@ -38,7 +38,7 @@ services:
       default:
         ipv4_address: 172.16.238.12
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --worker-id=1
@@ -62,7 +62,7 @@ services:
       default:
         ipv4_address: 172.16.238.13
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --worker-id=2
@@ -86,7 +86,7 @@ services:
       default:
         ipv4_address: 172.16.238.14
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50054
@@ -109,7 +109,7 @@ services:
       default:
         ipv4_address: 172.16.238.15
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50055
@@ -132,7 +132,7 @@ services:
       default:
         ipv4_address: 172.16.238.16
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50056
@@ -155,7 +155,7 @@ services:
       default:
         ipv4_address: 172.16.238.17
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50057
@@ -178,7 +178,7 @@ services:
       default:
         ipv4_address: 172.16.238.18
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50058
@@ -201,7 +201,7 @@ services:
       default:
         ipv4_address: 172.16.238.19
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50059
@@ -224,7 +224,7 @@ services:
       default:
         ipv4_address: 172.16.238.20
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50060
@@ -247,7 +247,7 @@ services:
       default:
         ipv4_address: 172.16.238.21
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50061
@@ -270,7 +270,7 @@ services:
       default:
         ipv4_address: 172.16.238.22
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50062
@@ -293,7 +293,7 @@ services:
       default:
         ipv4_address: 172.16.238.23
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50063
@@ -316,7 +316,7 @@ services:
       default:
         ipv4_address: 172.16.238.24
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50064
@@ -339,7 +339,7 @@ services:
       default:
         ipv4_address: 172.16.238.25
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50065
@@ -362,7 +362,7 @@ services:
       default:
         ipv4_address: 172.16.238.26
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50066
@@ -385,7 +385,7 @@ services:
       default:
         ipv4_address: 172.16.238.27
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50067
@@ -408,7 +408,7 @@ services:
       default:
         ipv4_address: 172.16.238.28
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50068
@@ -431,7 +431,7 @@ services:
       default:
         ipv4_address: 172.16.238.29
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50069
@@ -454,7 +454,7 @@ services:
       default:
         ipv4_address: 172.16.238.30
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50070
@@ -477,7 +477,7 @@ services:
       default:
         ipv4_address: 172.16.238.31
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50071
@@ -500,7 +500,7 @@ services:
       default:
         ipv4_address: 172.16.238.32
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50072
@@ -523,7 +523,7 @@ services:
       default:
         ipv4_address: 172.16.238.33
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50073
@@ -546,7 +546,7 @@ services:
       default:
         ipv4_address: 172.16.238.34
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50074
@@ -569,7 +569,7 @@ services:
       default:
         ipv4_address: 172.16.238.35
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50075
@@ -592,7 +592,7 @@ services:
       default:
         ipv4_address: 172.16.238.36
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50076
@@ -615,7 +615,7 @@ services:
       default:
         ipv4_address: 172.16.238.37
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50077
@@ -638,7 +638,7 @@ services:
       default:
         ipv4_address: 172.16.238.38
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50078
@@ -661,7 +661,7 @@ services:
       default:
         ipv4_address: 172.16.238.39
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50079
@@ -684,7 +684,7 @@ services:
       default:
         ipv4_address: 172.16.238.40
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50080
@@ -707,7 +707,7 @@ services:
       default:
         ipv4_address: 172.16.238.41
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50081
@@ -730,7 +730,7 @@ services:
       default:
         ipv4_address: 172.16.238.42
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50082
@@ -753,7 +753,7 @@ services:
       default:
         ipv4_address: 172.16.238.43
     environment:
-      - HANABIRA_ENV=local
+      - SAKURA_ENV=local
     command:
       - sakura
       - --port=50083
