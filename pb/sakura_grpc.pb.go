@@ -18,7 +18,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GeneratorClient interface {
-	Generate(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
+	Generate(ctx context.Context, in *GenerateRequest, opts ...grpc.CallOption) (*GenerateReply, error)
+	GenerateMulti(ctx context.Context, in *GenerateMultiRequest, opts ...grpc.CallOption) (*GenerateMultiReply, error)
 }
 
 type generatorClient struct {
@@ -29,9 +30,18 @@ func NewGeneratorClient(cc grpc.ClientConnInterface) GeneratorClient {
 	return &generatorClient{cc}
 }
 
-func (c *generatorClient) Generate(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
-	out := new(Reply)
+func (c *generatorClient) Generate(ctx context.Context, in *GenerateRequest, opts ...grpc.CallOption) (*GenerateReply, error) {
+	out := new(GenerateReply)
 	err := c.cc.Invoke(ctx, "/sakura.Generator/Generate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *generatorClient) GenerateMulti(ctx context.Context, in *GenerateMultiRequest, opts ...grpc.CallOption) (*GenerateMultiReply, error) {
+	out := new(GenerateMultiReply)
+	err := c.cc.Invoke(ctx, "/sakura.Generator/GenerateMulti", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +52,8 @@ func (c *generatorClient) Generate(ctx context.Context, in *Request, opts ...grp
 // All implementations must embed UnimplementedGeneratorServer
 // for forward compatibility
 type GeneratorServer interface {
-	Generate(context.Context, *Request) (*Reply, error)
+	Generate(context.Context, *GenerateRequest) (*GenerateReply, error)
+	GenerateMulti(context.Context, *GenerateMultiRequest) (*GenerateMultiReply, error)
 	mustEmbedUnimplementedGeneratorServer()
 }
 
@@ -50,8 +61,11 @@ type GeneratorServer interface {
 type UnimplementedGeneratorServer struct {
 }
 
-func (UnimplementedGeneratorServer) Generate(context.Context, *Request) (*Reply, error) {
+func (UnimplementedGeneratorServer) Generate(context.Context, *GenerateRequest) (*GenerateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Generate not implemented")
+}
+func (UnimplementedGeneratorServer) GenerateMulti(context.Context, *GenerateMultiRequest) (*GenerateMultiReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateMulti not implemented")
 }
 func (UnimplementedGeneratorServer) mustEmbedUnimplementedGeneratorServer() {}
 
@@ -67,7 +81,7 @@ func RegisterGeneratorServer(s grpc.ServiceRegistrar, srv GeneratorServer) {
 }
 
 func _Generator_Generate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+	in := new(GenerateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -79,7 +93,25 @@ func _Generator_Generate_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/sakura.Generator/Generate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GeneratorServer).Generate(ctx, req.(*Request))
+		return srv.(GeneratorServer).Generate(ctx, req.(*GenerateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Generator_GenerateMulti_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateMultiRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GeneratorServer).GenerateMulti(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sakura.Generator/GenerateMulti",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GeneratorServer).GenerateMulti(ctx, req.(*GenerateMultiRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -94,6 +126,10 @@ var Generator_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Generate",
 			Handler:    _Generator_Generate_Handler,
+		},
+		{
+			MethodName: "GenerateMulti",
+			Handler:    _Generator_GenerateMulti_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

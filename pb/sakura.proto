@@ -5,11 +5,20 @@ option go_package = "github.com/shooketh/sakura/pb";
 package sakura;
 
 service Generator {
-  rpc Generate (Request) returns (Reply) {}
+  rpc Generate (GenerateRequest) returns (GenerateReply) {}
+  rpc GenerateMulti (GenerateMultiRequest) returns (GenerateMultiReply) {}
 }
 
-message Request {}
+message GenerateRequest {}
 
-message Reply {
+message GenerateReply {
   int64 id = 1;
-} 
+}
+
+message GenerateMultiRequest {
+  int64 number = 1;
+}
+
+message GenerateMultiReply {
+  repeated int64 ids = 1;
+}
