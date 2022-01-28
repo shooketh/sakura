@@ -8,4 +8,5 @@ FROM gcr.io/distroless/base
 ENV APP_DIR=/sakura
 WORKDIR $APP_DIR
 COPY --from=build ${APP_DIR}/sakura /bin/sakura
+COPY /config /etc/sakura/config
 CMD ["sakura"]

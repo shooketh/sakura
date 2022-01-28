@@ -61,7 +61,7 @@ func Init() error {
 		return fmt.Errorf("failed to set SAKURA_ENV or --env flag")
 	}
 
-	systemPath := "/etc/sakura/"
+	systemPath := "/etc/sakura/config/"
 	currentPath := "../../config/"
 	configType := "yaml"
 
